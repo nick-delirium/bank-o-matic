@@ -1,0 +1,4 @@
+{{givenNum}}
+<input [(ngModel)]="givenNum" placeholder="Сумма">
+<button (click)="onGiveCash()">Рассчитать</button><button (click)="onGiveCashFix()">Рассчитать улучшенным методом</button>
+<div *ngIf="output != null">{{output}}</div>
