@@ -1,4 +1,3 @@
-{{denoms}} 
-<br>
-<span style='color:red' *ngIf="error != null">{{error}}</span> <br>
+
 <input [(ngModel)]="denominationsStr" placeholder="Номиналы валют: 1,5, 10..."><button (click)="save()">Save</button>
+<span style='color:red' *ngIf="error != null">{{error}}</span> <br>

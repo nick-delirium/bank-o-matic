@@ -1,9 +1,7 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'denominations_service.dart';
-import 'custom_exception.dart';
 
 @Component(
   selector: 'atm-comp',
@@ -12,74 +10,39 @@ import 'custom_exception.dart';
   providers: [ClassProvider(DenominationsService)],
 )
 
-class AtmComponent implements OnInit {
-  final DenominationsService _denominationsService;
+class AtmComponent {
   List denominations;
   Map output;
+  String outputText = 'Result:';
   String errorText;
   String givenNum;
-  AtmComponent(this._denominationsService);
-  
+  String givenDenoms;
+  String usedDenoms;
   @Input()
   List<int> denoms;
 
-  Future<void> _getAllDenoms() async {
-    denominations = await _denominationsService.getAll();
-  }
-  
-  void ngOnInit() => _getAllDenoms();
   
   void onGiveCash() { 
     try {
+      outputText = 'Result: ';
+      usedDenoms = null;
+      errorText = null;
       output = calculateToLowest(int.parse(givenNum), denoms);
-    } on UnreachebleNumberExc {
+      givenDenoms = denoms.join(', ');
+      for (var key in denoms) {
+        outputText = outputText + '${key}x${output[key]}; ';
+      }
+    } catch(e) {
       output = null;
-      errorText = 'Error: cant give this number with such a denoms: $denominations';
+      errorText = 'ERROR: $e';
+    }
+    finally {
+      usedDenoms =  'used denominals: $denoms';
     }
   }
-  void onGiveCashFix() {
-    try{
-      output = calculateFixed(int.parse(givenNum), denominations);
-    } on UnreachebleNumberExc {
-      output = null;
-      errorText = 'Error: cant give this number with such a denoms: $denominations';
-    }
-  }
-  void onSetDenominations() => null;
 
- // [2, 5, 10, 50] => 20
-  Map calculateFixed(int given, List<int> denoms) {
-    int start = given;
-    bool lastEl = false;
-    Map<int, int> used = {};
-    for (var key in denoms) {
-      used[key] = 0;
-    }
-
-    int i = used.length - 1;
-    while (start > 0 && i >= 0) {
-      if (start - denoms[i] >= 0) {
-        double delimeter = start/denoms[i];
-        while(delimeter > 1) {
-          start = start - denoms[i];
-          used[denoms[i]] += 1;
-          delimeter = start/denoms[i];
-        }
-        print(i);
-        if ((start / denoms[i] == 1 && denoms[i] == denoms[0]) || denoms[i] == start / denoms[i-1] || restUnavailable(denoms, i, start)) {
-          start = start - denoms[i];
-          used[denoms[i]] += 1;
-          lastEl = true;
-        }
-        if (!lastEl && i > 0) i -= 1; // here must be if (denoms[i]) impl on dart but I found that (denoms[i] is int) not working
-        if (start == 0) return used;
-      } else i -= 1;
-      if (i < 0 || start < denoms.reduce(min)) throw new UnreachebleNumberExc('Cant give this sum');
-    }
-    return used;
-  }
-  // 16 => 10, 5 остается 1 и ошибка
   Map calculateToLowest(int given, List<int> denoms) {
+    if (given < 0) throw ('Cant give negative sum');
     int start = given;
     bool lastEl = false;
     Map<int, int> used = {};
@@ -104,7 +67,7 @@ class AtmComponent implements OnInit {
         if (!lastEl && i > 0) i -= 1; // here must be if (denoms[i]) impl on dart but I found that (denoms[i] is int) not working
         if (start == 0) return used;
       } else i -= 1;
-      if (i < 0 || start < denoms.reduce(min)) throw new UnreachebleNumberExc('Cant give this sum');
+      if (i < 0 || start < denoms.reduce(min)) throw ('Cant give this sum');
     }
     return used;
   }
@@ -124,3 +87,37 @@ class AtmComponent implements OnInit {
   }
   
 }
+
+
+// this can work better in some situations
+//  // [1, 5, 10, 50] => 20 => 10, 5, 1,1,1,1,1; BUT 21 => 10, 10, 1.
+//   Map calculateFixed(int given, List<int> denoms) {
+//     int start = given;
+//     bool lastEl = false;
+//     Map<int, int> used = {};
+//     for (var key in denoms) {
+//       used[key] = 0;
+//     }
+
+//     int i = used.length - 1;
+//     while (start > 0 && i >= 0) {
+//       if (start - denoms[i] >= 0) {
+//         double delimeter = start/denoms[i];
+//         while(delimeter > 1) {
+//           start = start - denoms[i];
+//           used[denoms[i]] += 1;
+//           delimeter = start/denoms[i];
+//         }
+//         print(i);
+//         if ((start / denoms[i] == 1 && denoms[i] == denoms[0]) || denoms[i] == start / denoms[i-1] || restUnavailable(denoms, i, start)) {
+//           start = start - denoms[i];
+//           used[denoms[i]] += 1;
+//           lastEl = true;
+//         }
+//         if (!lastEl && i > 0) i -= 1; // here must be if (denoms[i]) impl on dart but I found that (denoms[i] is int) not working
+//         if (start == 0) return used;
+//       } else i -= 1;
+//       if (i < 0 || start < denoms.reduce(min)) throw new UnreachebleNumberExc('Cant give this sum');
+//     }
+//     return used;
+//   }

@@ -1,5 +1,15 @@
-{{denominations}} || {{denoms}} <br>
+<br>
 <input [(ngModel)]="givenNum" placeholder="Сумма">
-<button (click)="onGiveCash()">Рассчитать</button>  <button (click)="onGiveCashFix()">альтернативный метод</button>
-<div *ngIf="output != null">{{output}}</div>
-<div class='error' *ngIf="errorText != null"> {{errorText}} </div>
+<button (click)="onGiveCash()">Рассчитать</button>
+<div *ngIf="output != null">
+  Used denominals: {{givenDenoms}} <br>
+  <br>
+  {{outputText}}
+  <br><br> 
+  <span style='opacity:0.05'> {{output}} </span>
+</div>
+<div class='error' *ngIf="errorText != null"> 
+  {{errorText}}
+  <br>
+  Used denominals:{{usedDenoms}} 
+</div>

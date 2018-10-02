@@ -24,25 +24,28 @@ class EditDenomsComponent implements OnInit {
 
   @Output()
   Stream get changeDenoms => _open.stream;
-  void change() => _open.add(denoms);
+  void changeParent() => _open.add(denoms);
 
   Future<void> _getDenomArray() async {
     denominations = await _denominationsSerice.getAll();
     denominationsStr = denominations.join(', ');
   }
-  List<int> saveArray() {
+  void ngOnInit() => _getDenomArray();
+
+  List<int> saveArray(denomsStr) {
     error = null;
-    if (denominationsStr.contains('-') 
-        || denominationsStr.contains(new RegExp(r'[A-Za-z]')) ) {
+    if (denomsStr.contains('-') 
+        || denomsStr.contains(new RegExp(r'[A-Za-z]')) ) {
       error = "Incorrent values given";
       return [0,0,0];
     }
-    List<int> array = denominationsStr.split(',').map((i) => int.parse(i)).toList();
+
+    List<int> array = List<int>.from(denomsStr.split(',').map((i) => int.parse(i)).toList());
     return array;
   }
-  void ngOnInit() => _getDenomArray();
+  
   void save() { 
-    denoms = saveArray();
-    change();
+    denoms = saveArray(denominationsStr);
+    changeParent();
   }
 }
