@@ -26,16 +26,25 @@ void main() {
     AtmComponent component = new AtmComponent();
     expect(component.calculateToLowest(20, [1, 5, 10]), equals( {1: 5, 5: 1, 10: 1} ));
   });
-  test('denominals getting test', () async {
+  
+  test('denominals getting test: return [1,5,10,50,100]', () async {
     DenominationsService component = new DenominationsService();
     List<int> resut = await component.getAll();
     expect(resut, equals( mockDenominations ));
   });
 
-  test('denominals editing test', () async {
+  test('denominals editing test: you can set denoms', () async {
     EditDenomsComponent component = new EditDenomsComponent(null);
     List<int> result = await component.saveArray('1, 5, 10');
     expect(result, equals( [1, 5, 10] ));
+  });
+  test('negative numbers test: -1 throws an error', () { //cant make it working
+    AtmComponent component = new AtmComponent();
+    try {
+      component.calculateToLowest(-1, [1, 5, 10]);
+    } on FormatException catch (e) {
+      expect(e.message, 'Cant give negative sum');
+    }
   });
   // Testing info: https://webdev.dartlang.org/angular/guide/testing
 }

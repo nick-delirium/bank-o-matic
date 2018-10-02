@@ -42,7 +42,7 @@ class AtmComponent {
   }
 
   Map calculateToLowest(int given, List<int> denoms) {
-    if (given < 0) throw ('Cant give negative sum');
+    if (given < 0) throw new FormatException('Cant give negative sum');
     int start = given;
     bool lastEl = false;
     Map<int, int> used = {};
@@ -67,7 +67,7 @@ class AtmComponent {
         if (!lastEl && i > 0) i -= 1; // here must be if (denoms[i]) impl on dart but I found that (denoms[i] is int) not working
         if (start == 0) return used;
       } else i -= 1;
-      if (i < 0 || start < denoms.reduce(min)) throw ('Cant give this sum');
+      if (i < 0 || start < denoms.reduce(min)) throw new FormatException('Cant give this sum');
     }
     return used;
   }
