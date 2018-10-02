@@ -41,6 +41,7 @@ class EditDenomsComponent implements OnInit {
     }
 
     List<int> array = List<int>.from(denomsStr.split(',').map((i) => int.parse(i)).toList());
+    array.sort();
     return array;
   }
   

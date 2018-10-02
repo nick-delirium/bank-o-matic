@@ -38,6 +38,22 @@ void main() {
     List<int> result = await component.saveArray('1, 5, 10');
     expect(result, equals( [1, 5, 10] ));
   });
+  // this actually displays error as an output and sets dens array as 0 0 0
+  test('denominals editing test: you cannot set letters', () async {
+    EditDenomsComponent component = new EditDenomsComponent(null);
+    List<int> result = await component.saveArray('a, b, c');
+    expect(result, equals( [0, 0, 0] ));
+  });
+  test('denominals editing test: returned list is always sorted from min to max', () async {
+    EditDenomsComponent component = new EditDenomsComponent(null);
+    List<int> result = await component.saveArray('10, 1, 7');
+    expect(result, equals( [1, 7, 10] ));
+  });
+  test('denominals editing test: you cannot set negative numbers', () async {
+    EditDenomsComponent component = new EditDenomsComponent(null);
+    List<int> result = await component.saveArray('1, 5, -10');
+    expect(result, equals( [0, 0, 0] ));
+  });
   test('negative numbers test: -1 throws an error', () { //cant make it working
     AtmComponent component = new AtmComponent();
     try {
