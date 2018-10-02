@@ -1,4 +1,5 @@
-{{givenNum}}
+{{denominations}} || {{denoms}} <br>
 <input [(ngModel)]="givenNum" placeholder="Сумма">
-<button (click)="onGiveCash()">Рассчитать</button><button (click)="onGiveCashFix()">Рассчитать улучшенным методом</button>
+<button (click)="onGiveCash()">Рассчитать</button>  <button (click)="onGiveCashFix()">альтернативный метод</button>
 <div *ngIf="output != null">{{output}}</div>
+<div class='error' *ngIf="errorText != null"> {{errorText}} </div>

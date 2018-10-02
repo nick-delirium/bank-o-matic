@@ -1,2 +1,7 @@
 <h1>ATM algorythm</h1>
-<atm></atm>
+{{denoms}} <br>
+<atm-comp [(denoms)]="denoms" ></atm-comp>
+<br><br>
+<button  (click)='editDenoms()'>Edit denominations</button>
+<br><br>
+<edit-denoms (changeDenoms)="denoms = $event" [(denoms)]="denoms" *ngIf='editing'></edit-denoms>
